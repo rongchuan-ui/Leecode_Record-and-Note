@@ -12,41 +12,12 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Debug secrets presence (no printing)
-        env:
-          LEETCODE_SESSION: ${{ secrets.LEETCODE_SESSION }}
-          CSRFTOKEN: ${{ secrets.CSRFTOKEN }}
-        run: |
-          set -e
-          test -n "$LEETCODE_SESSION"
-          test -n "$CSRFTOKEN"
-          echo "Secrets are present."
-
-      - name: Create leetcode/ folder and a test file (pipeline check)
-        run: |
-          set -euxo pipefail
-          mkdir -p leetcode
-          date -u +"%Y-%m-%dT%H:%M:%SZ" > leetcode/_last_sync_utc.txt
-          echo "ok" > leetcode/_pipeline_ok.txt
-
-      # 这里未来替换成真正的“导出 leetcode 题解代码到 leetcode/”的命令
-      - name: TODO - export leetcode solutions
-        run: |
-          echo "TODO: install and run leetcode exporter here"
-
-      - name: Commit & push
-        run: |
-          set -euxo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-            exit 0
-          fi
-
-          git commit -m "chore: sync leetcode solutions"
-          git push
+      - name: Sync
+        uses: joshcai/leetcode-sync@v1.7
+        with:
+          github-token: ${{ github.token }}
+          leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
+          leetcode-session: ${{ secrets.LEETCODE_SESSION }}
+          destination-folder: leetcode
+          verbose: true
+          commit-header: "[LeetCode Sync]"
