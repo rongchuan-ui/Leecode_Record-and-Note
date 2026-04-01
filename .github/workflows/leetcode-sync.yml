@@ -1,0 +1,30 @@
+name: Sync LeetCode Solutions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 1 * * *"  # 每天 UTC 01:30
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Debug secrets presence (no printing)
+        env:
+          LEETCODE_SESSION: ${{ secrets.LEETCODE_SESSION }}
+          CSRFTOKEN: ${{ secrets.CSRFTOKEN }}
+        run: |
+          set -e
+          test -n "$LEETCODE_SESSION"
+          test -n "$CSRFTOKEN"
+          echo "Secrets are present."
+
+      - name: TODO sync step
+        run: |
+          echo "Next we need to choose a specific LeetCode sync tool and run it here."
+          
