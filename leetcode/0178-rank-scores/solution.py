@@ -13,6 +13,7 @@ def order_scores(scores: pd.DataFrame) -> pd.DataFrame:
                 j+=1
         else:
             scores.loc[i,"rank"]=j
+        i+=1
     return pd.DataFrame({
         "score":scores["score"],
         "rank":scores["rank"]
