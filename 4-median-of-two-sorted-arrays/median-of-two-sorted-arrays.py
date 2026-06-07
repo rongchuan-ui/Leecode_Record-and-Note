@@ -9,7 +9,8 @@ class Solution:
         #return nums1
         m=len(nums1)
         n=m%2
+        b=int(m/2)
         if n == 0:
-            return (nums1[int(m/2)-1]+nums1[int(m/2)])/2
+            return (nums1[b-1]+nums1[b])/2
         else:
             return nums1[math.floor(m/2)]
