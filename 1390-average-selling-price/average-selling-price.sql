@@ -7,10 +7,9 @@
         End
     from Prices p
     left join UnitsSold u
-    on p.product_id = u.product_id
-    where 
-        ( (p.end_date - p.start_date)>= (u.purchase_date - p.start_date) and (u.purchase_date - p.start_date) >=0 ) 
-        or u.purchase_date is null 
+    on p.product_id = u.product_id and (
+    ( (p.end_date - p.start_date)>= (u.purchase_date - p.start_date) and (u.purchase_date - p.start_date) >=0 ) 
+        or u.purchase_date is null )
  ),
  Revenue AS (
     select product_id,
