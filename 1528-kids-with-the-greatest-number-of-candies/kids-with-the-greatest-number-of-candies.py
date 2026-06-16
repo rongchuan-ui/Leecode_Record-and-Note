@@ -5,8 +5,10 @@ class Solution:
         for i in range(0, len(candies)):
             n=extraCandies+candies[i]
             if m>n:
-                lst.append(bool(0))
+                # lst.append(bool(0))
+                lst.append(False)
             else:
-                lst.append(bool(1))
+                # lst.append(bool(1))
+                lst.append(True)
             i+=1
         return lst
