@@ -12,12 +12,22 @@
 -- from month
 -- group by month,country
 
+-- SELECT 
+--     TO_CHAR(trans_date, 'YYYY-MM') AS month,
+--     country,
+--     COUNT(id) AS trans_count,
+--     COUNT(CASE WHEN state = 'approved' THEN 1 END) AS approved_count, -- 顺便提一句：ELSE NULL 可以直接不写，不写默认就是 NULL
+--     SUM(amount) AS trans_total_amount,
+--     coalesce(sum(CASE WHEN state = 'approved' THEN amount END),0) as approved_total_amount
+-- FROM Transactions
+-- GROUP BY month, country; -- 直接使用别名进行分组！
+
 SELECT 
-    TO_CHAR(trans_date, 'YYYY-MM') AS month,
+    TO_CHAR(trans_date, 'YYYY-MM') AS month, 
     country,
     COUNT(id) AS trans_count,
-    COUNT(CASE WHEN state = 'approved' THEN 1 END) AS approved_count, -- 顺便提一句：ELSE NULL 可以直接不写，不写默认就是 NULL
+    COUNT(id) FILTER (WHERE state = 'approved') AS approved_count,
     SUM(amount) AS trans_total_amount,
-    coalesce(sum(CASE WHEN state = 'approved' THEN amount END),0) as approved_total_amount
+    Coalesce(SUM(amount) FILTER (WHERE state = 'approved'),0) AS approved_total_amount
 FROM Transactions
-GROUP BY month, country; -- 直接使用别名进行分组！
+GROUP BY month, country;
