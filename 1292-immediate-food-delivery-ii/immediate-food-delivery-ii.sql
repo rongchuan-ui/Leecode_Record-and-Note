@@ -11,15 +11,28 @@
 -- inner join first_order_date f
 -- on f.first_order_date=d.order_date and d.customer_id=f.customer_id
 
-WITH ranked_orders AS (
-    SELECT *,
-           ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY order_date) AS rn
-    FROM Delivery
-)
+-- WITH ranked_orders AS (
+--     SELECT *,
+--            ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY order_date) AS rn
+--     FROM Delivery
+-- )
+-- SELECT 
+--     ROUND(
+--         AVG((order_date = customer_pref_delivery_date)::INT) * 100, 
+--         2
+--     ) AS immediate_percentage
+-- FROM ranked_orders
+-- WHERE rn = 1;
+
 SELECT 
     ROUND(
-        AVG((order_date = customer_pref_delivery_date)::INT) * 100, 
+        COUNT(*) FILTER (WHERE order_date = customer_pref_delivery_date)::NUMERIC 
+        / COUNT(*)::NUMERIC * 100, 
         2
     ) AS immediate_percentage
-FROM ranked_orders
-WHERE rn = 1;
+FROM Delivery
+WHERE (customer_id, order_date) IN (
+    SELECT customer_id, MIN(order_date) 
+    FROM Delivery 
+    GROUP BY customer_id
+);
