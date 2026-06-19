@@ -10,5 +10,4 @@ class Solution:
             else:
                 # lst.append(bool(1))
                 lst.append(True)
-            i+=1
         return lst
